@@ -1,4 +1,5 @@
 import express, { Application } from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import { DBCONNECTION } from '../../config/db';
 import { errorHandler } from './middlewares/errorHandler';
@@ -15,6 +16,11 @@ class App {
     private PORT = process.env.PORT || '3500'
     private apiVersion = '/api/v1'
 
+    private corsOptions = {
+        origin: 'localhost:4200',
+        optionsSuccessStatus: 200
+    };
+
     constructor() {
         this.app = express();
         this.initMiddlewares()
@@ -23,11 +29,23 @@ class App {
     }
 
     private initMiddlewares() {
+        this.app.use(cors(
+            {
+                origin: [
+                'http://localhost:4200',
+                // 'http://localhost:4100',
+                // 'http://localhost:4201',
+                // 'https://drobotics-admin.netlify.app',
+                // 'https://drobotics-tms-web.netlify.app',
+                ],
+            }
+        ))
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.json());
     }
 
     private initRoutes() {
+        
         this.app.use(`${this.apiVersion}`, authRoutes.initRoutes())
         this.app.get('/', (req: any, res: any) => {
             res.status(200).json({ msg: "WELCOM TO ACADEMIX-ASSIST :)" })

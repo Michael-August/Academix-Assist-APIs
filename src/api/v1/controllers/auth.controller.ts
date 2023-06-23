@@ -23,8 +23,8 @@ class AuthController {
             }
 
             const token = jwt.sign({ id: user?._id, email: user?.email, phone: user?.phone }, `${process.env.JWT_SECRET}`)
-            const { password, ...otherProps } = user._doc
-            const result = { ...otherProps, access_token: token }
+            const { password, ...loggedinUser } = user._doc
+            const result = { loggedinUser, access_token: token }
             res.status(200).json({ success: true, message: 'OK', data: result })
 
         } catch (error) {
