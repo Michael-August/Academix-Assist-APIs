@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import Message from "../models/Message";
 import Conversation from "../models/Conversation";
 
+import axios from 'axios'
+
 class MessageController {
     constructor() {
 
@@ -22,6 +24,7 @@ class MessageController {
 
             if(newMessage.isNew) {
                 // Make request to the model
+                let externalServiceResponse = axios.get('')
                 let aiResponse: any;
 
                 const conversation = await Conversation.create({ userId: req.user._id, message: req.body.message })  
@@ -42,6 +45,18 @@ class MessageController {
 
                 res.send(201).json({ success: true, message: 'OK', messageFromAi })
             }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getConversation(req: any, res: Response, next: NextFunction) {
+        try {
+            let externalServiceResponse = await axios.post('http://192.168.201.214:8000', req.body)
+            let response = externalServiceResponse.data
+            const conversationForAUser = Conversation.findOne({ userId: req.user._id })
+            const conversations = await Conversation.find({ conversationId: req.params.conversationId })
+            res.status(200).json({ success: true, message: "OK", data: response })
         } catch (error) {
             next(error)
         }

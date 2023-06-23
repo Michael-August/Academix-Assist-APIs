@@ -14,7 +14,7 @@ class AuthController {
         try {
             const user = await User.findOne({ email: req.body.email }).select('+password')
             if(!user) {
-                throw new HttpError('Invalid credentials, check and try again', 401)
+                throw new HttpError('Invalid creden••••••••tials, check and try again', 401)
             }
 
             const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password)

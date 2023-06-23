@@ -16,6 +16,8 @@ class MessageRoutes {
 
         this.router.route('/')
             .post(this.controller.createMessage)
+            .get(this.controller.getConversation)
+        
         return this.router
     }
 }

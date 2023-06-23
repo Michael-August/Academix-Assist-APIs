@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes';
 import conversationRoutes from './routes/conversation.routes';
 import messageRoutes from './routes/message.routes';
 import { JWTVerification } from './middlewares/validateJWT';
+import paymentRoute from './routes/payment.route';
 
 dotenv.config()
 
@@ -29,17 +30,7 @@ class App {
     }
 
     private initMiddlewares() {
-        this.app.use(cors(
-            {
-                origin: [
-                'http://localhost:4200',
-                // 'http://localhost:4100',
-                // 'http://localhost:4201',
-                // 'https://drobotics-admin.netlify.app',
-                // 'https://drobotics-tms-web.netlify.app',
-                ],
-            }
-        ))
+        this.app.use(cors())
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.json());
     }
@@ -47,6 +38,7 @@ class App {
     private initRoutes() {
         
         this.app.use(`${this.apiVersion}`, authRoutes.initRoutes())
+        this.app.use(`${this.apiVersion}/`, paymentRoute.initRoutes())
         this.app.get('/', (req: any, res: any) => {
             res.status(200).json({ msg: "WELCOM TO ACADEMIX-ASSIST :)" })
         })
